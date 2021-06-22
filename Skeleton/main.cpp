@@ -156,17 +156,17 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		constexpr int base_y = 240;
 		constexpr float sin_amp = 50.0f;
 		int x = 0;
-		int y = base_y;
+		int y = base_y + sin_amp * sin(DegreeToRadian((float)( frameForAngle)));;
 		Position2 groundPos(x, y);
+		Position2 currentPos(x, y);
+		//Vector2 lastDelta90Vec = Vector2::Zero();
+		Vector2 lastDelta90Vectors[2] = { Vector2::Zero(), Vector2::Zero() };
 		for (int i = 1; i <= count; ++i)
 		{
 			int nextX = i * block_size;
 			int nextY =sin_amp *sin(DegreeToRadian((float)(5.0f* nextX + frameForAngle)));
-			Position2 currentPos(x, y);
-			//Vector2 lastDelta90Vec = Vector2::Zero();
-			Vector2 lastDelta90Vectors[2] = { Vector2::Zero(), Vector2::Zero() };
-			auto deltaVec = Vector2(block_size,nextY).Normalized() * block_size;
 			
+			auto deltaVec = Vector2(block_size,nextY).Normalized() * block_size;
 			auto nextPos = currentPos + deltaVec;
 			
 			auto middleVec0 = deltaVec;
@@ -184,31 +184,32 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 			}
 			lastDelta90Vectors[1] = lastDelta90Vectors[0];
 			lastDelta90Vectors[0] = deltaVec.Rotated90();
-			auto middlePosL = currentPos + middleVecL;
-			auto middlePosR = nextPos + middleVecR;
+			
 			/*DrawModiGraph(
 				x, y,
 				nextX, nextY,
 				nextX, nextY + block_size,
 				x, y + block_size,
 				bgAssetH, 5.0f);*/
-			auto rithPos = nextPos + deltaVec.;
-			auto LeftPos = nextPos + deltaVec.;
+			auto rithPos = nextPos + deltaVec.Rotated90();
+			auto LeftPos = nextPos + deltaVec.Rotated90();
+
+			auto middlePosL = currentPos + middleVecL;
+			auto middlePosR = nextPos + middleVecR;
 			DrawRectModiGraph(
-				groundPos.x, groundPos.y,
+				currentPos.x, currentPos.y,
 				nextPos.x, nextPos.y,
-				nextPos.x, nextPos.y + block_size,
-				groundPos.x, groundPos.y + block_size,
+				middlePosR.x, middlePosR.y ,
+				middlePosL.x, middlePosL.y,
 				48,0,
 				16,16,
 				bgAssetH, true);
-			DrawLineAA(groundPos.x, groundPos.y, nextPos.x, nextPos.y, 0xffffff, 2.0f);
+			//DrawLineAA(groundPos.x, groundPos.y, nextPos.x, nextPos.y, 0xffffff, 2.0f);
 			/*DrawLineAA(nextX, nextY, nextX, nextY + block_size, 0xffffff, 2.0f);
 			DrawLineAA(nextX, nextY + block_size, x, y + block_size, 0xffffff, 2.0f);
 			DrawLineAA(x, y, nextX, nextY, 0xffffff, 2.0f);*/
 
-			groundPos.x = nextPos.x;
-			groundPos.y = nextPos.y;
+			currentPos = nextPos;
 		}
 		DrawRotaGraph2(rcA.center.x, rcA.center.y, centerX, 35, 4.0f, angle, graphH[imgIdx], true, isReverse);
 		/*int frameNo = 0;
