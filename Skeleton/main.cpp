@@ -152,24 +152,25 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		
 	
 		constexpr size_t block_size = 32;
-		auto  count = 720 / 32;
+		auto  count = 720 / block_size;
 		constexpr int base_y = 240;
 		constexpr float sin_amp = 50.0f;
 		int x = 0;
-		int y = base_y + sin_amp * sin(DegreeToRadian((float)( frameForAngle)));;
-		Position2 groundPos(x, y);
+		int y = base_y + sin_amp * 
+			sin(DegreeToRadian((float)( frameForAngle)));
+		/*int y = base_y;*/
 		Position2 currentPos(x, y);
-		//Vector2 lastDelta90Vec = Vector2::Zero();
 		Vector2 lastDelta90Vectors[2] = { Vector2::Zero(), Vector2::Zero() };
 		for (int i = 1; i <= count; ++i)
 		{
 			int nextX = i * block_size;
-			int nextY =sin_amp *sin(DegreeToRadian((float)(5.0f* nextX + frameForAngle)));
+			int nextY = sin_amp *
+				sin(DegreeToRadian((float)(0.5f* nextX + frameForAngle)));
 			
 			auto deltaVec = Vector2(block_size,nextY).Normalized() * block_size;
+
 			auto nextPos = currentPos + deltaVec;
 			
-			auto middleVec0 = deltaVec;
 			auto middleVecR = deltaVec.Rotated90();
 			
 			if (!(lastDelta90Vectors[0] == Vector2::Zero()))
@@ -191,9 +192,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 				nextX, nextY + block_size,
 				x, y + block_size,
 				bgAssetH, 5.0f);*/
+			//DrawLineAA(currentPos.x, currentPos.y, nextPos.x, nextPos.y, 0xffffff, 2.0f);
 			auto rithPos = nextPos + deltaVec.Rotated90();
 			auto LeftPos = nextPos + deltaVec.Rotated90();
-
 			auto middlePosL = currentPos + middleVecL;
 			auto middlePosR = nextPos + middleVecR;
 			DrawRectModiGraph(
@@ -204,6 +205,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 				48,0,
 				16,16,
 				bgAssetH, true);
+
 			//DrawLineAA(groundPos.x, groundPos.y, nextPos.x, nextPos.y, 0xffffff, 2.0f);
 			/*DrawLineAA(nextX, nextY, nextX, nextY + block_size, 0xffffff, 2.0f);
 			DrawLineAA(nextX, nextY + block_size, x, y + block_size, 0xffffff, 2.0f);
