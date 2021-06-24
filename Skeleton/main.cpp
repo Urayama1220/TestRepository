@@ -67,6 +67,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	assert(groundH >= 0);
 	int bgAssetH = LoadGraph(L"image/Assets.png");
 	assert(bgAssetH >= 0);
+	int arrowH = LoadGraph(L"image/arrow.png");
+	assert(arrowH >= 0);
 	constexpr size_t pictrure_num = 5;
 	int graphH[pictrure_num] = {};
 	for (int i = 0; i < pictrure_num; ++i)
@@ -155,12 +157,13 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		auto  count = 720 / block_size;
 		constexpr int base_y = 240;
 		constexpr float sin_amp = 50.0f;
-		int x = 0;
+		int x = 20;
 		int y = base_y + sin_amp * 
 			sin(DegreeToRadian((float)( frameForAngle)));
 		/*int y = base_y;*/
 		Position2 currentPos(x, y);
 		Vector2 lastDelta90Vectors[2] = { Vector2::Zero(), Vector2::Zero() };
+		Vector2 lastPos = Vector2::Zero();
 		for (int i = 1; i <= count; ++i)
 		{
 			int nextX = i * block_size;
@@ -195,22 +198,26 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 			//DrawLineAA(currentPos.x, currentPos.y, nextPos.x, nextPos.y, 0xffffff, 2.0f);
 			auto rithPos = nextPos + deltaVec.Rotated90();
 			auto LeftPos = nextPos + deltaVec.Rotated90();
-			auto middlePosL = currentPos + middleVecL;
-			auto middlePosR = nextPos + middleVecR;
-			DrawRectModiGraph(
-				currentPos.x, currentPos.y,
-				nextPos.x, nextPos.y,
-				middlePosR.x, middlePosR.y ,
-				middlePosL.x, middlePosL.y,
-				48,0,
-				16,16,
-				bgAssetH, true);
-
-			//DrawLineAA(groundPos.x, groundPos.y, nextPos.x, nextPos.y, 0xffffff, 2.0f);
-			/*DrawLineAA(nextX, nextY, nextX, nextY + block_size, 0xffffff, 2.0f);
-			DrawLineAA(nextX, nextY + block_size, x, y + block_size, 0xffffff, 2.0f);
-			DrawLineAA(x, y, nextX, nextY, 0xffffff, 2.0f);*/
-
+			
+			if (!(lastPos == Vector2::ZERO))
+			{
+				auto middlePosL = lastPos + middleVecL;
+				auto middlePosR = currentPos + middleVecR;
+				DrawRectModiGraph(
+					lastPos.x, lastPos.y,
+					currentPos.x, currentPos.y,
+					middlePosR.x, middlePosR.y,
+					middlePosL.x, middlePosL.y,
+					48, 0,
+					16, 16,
+					bgAssetH, true);
+			}
+			//DrawLineAA(lastPos.x, lastPos.y, currentPos.x, currentPos.y, 0xffffff, 2.0f);
+			//DrawCircleAA(currentPos.x, currentPos.y, 5.0f, 0xffffff, 2.0f);
+			/*DrawLineAA(nextPos.x, nextPos.y, rithPos.x, rithPos.y , 0xffffff, 2.0f);
+			DrawLineAA(currentPos.x, currentPos.y , LeftPos.x, LeftPos.y, 0xffffff, 2.0f);
+			DrawLineAA(currentPos.x, currentPos.y, middlePosL.x, middlePosL.y, 0xffffff, 2.0f);*/
+			lastPos = currentPos;
 			currentPos = nextPos;
 		}
 		DrawRotaGraph2(rcA.center.x, rcA.center.y, centerX, 35, 4.0f, angle, graphH[imgIdx], true, isReverse);

@@ -27,6 +27,7 @@ struct Vector2 {
 	{
 		return{ 0.0f,0.0f };
 	};
+	static const Vector2 ZERO;
 	//‘ã“ü
 	void operator= (const Vector2& rval);
 	void operator+= (const Vector2& rval);

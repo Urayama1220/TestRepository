@@ -2,6 +2,9 @@
 #include <cmath>
 #include <cassert>
 #include <algorithm>
+
+const Vector2 Vector2::ZERO = {0,0};
+
 float Vector2::Magnitude() const
 {
 	return hypot(x,y);
