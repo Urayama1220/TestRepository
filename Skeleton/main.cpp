@@ -151,10 +151,12 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 			centerX = w - centerX;
 		}
 		
-		
-	
+		int arrW, arrH;
+		GetGraphSize(arrowH, &arrW, &arrH);
 		constexpr size_t block_size = 32;
+		constexpr size_t width = 1000;
 		auto  count = 720 / block_size;
+		auto weight = (float)900 / (float)width;
 		constexpr int base_y = 240;
 		constexpr float sin_amp = 50.0f;
 		int x = 20;
@@ -208,9 +210,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 					currentPos.x, currentPos.y,
 					middlePosR.x, middlePosR.y,
 					middlePosL.x, middlePosL.y,
-					48, 0,
-					16, 16,
-					bgAssetH, true);
+					block_size *i * weight, 0,
+					block_size * weight, 64,
+					arrowH, true);
 			}
 			//DrawLineAA(lastPos.x, lastPos.y, currentPos.x, currentPos.y, 0xffffff, 2.0f);
 			//DrawCircleAA(currentPos.x, currentPos.y, 5.0f, 0xffffff, 2.0f);
