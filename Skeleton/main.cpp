@@ -151,12 +151,12 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 			centerX = w - centerX;
 		}
 		
-		int arrW, arrH;
-		GetGraphSize(arrowH, &arrW, &arrH);
+		int imageWidth, arrH;
+		GetGraphSize(arrowH, &imageWidth, &arrH);
 		constexpr size_t block_size = 32;
 		constexpr size_t width = 1000;
-		auto  count = 720 / block_size;
-		auto weight = (float)900 / (float)width;
+		auto  count = width / block_size;
+		auto weight = (float)imageWidth / (float)width;
 		constexpr int base_y = 240;
 		constexpr float sin_amp = 50.0f;
 		int x = 20;
@@ -209,7 +209,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 					lastPos.x, lastPos.y,
 					currentPos.x, currentPos.y,
 					middlePosR.x, middlePosR.y,
-					middlePosL.x, middlePosL.y,
+					middlePosL.x, middlePosL.y,//è„élÇ¬Ç™í∏ì_
 					block_size *i * weight, 0,
 					block_size * weight, 64,
 					arrowH, true);
